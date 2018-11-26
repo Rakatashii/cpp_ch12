@@ -28,7 +28,7 @@ void Iterator::previous(int idx){
 bool Iterator::equals(Iterator b) const{
     return position == b.position;
 }
-
+// Guessing it would be a little different when not working w/ strings - will wait for templates to get into that
 std::string& Iterator::operator*(){
     /* std::string* node_data = &(position->data); return *node_data; */
     return *&(position->data);

@@ -23,6 +23,4 @@ private:
     friend class Iterator;
 };
 
-
-
 #endif /* List_hpp */
