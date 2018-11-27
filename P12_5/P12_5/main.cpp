@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// DOES STRING_LLIST SEE THIS???
+
 int main(int argc, const char * argv[]) {
     List people;
     Iterator iter = people.begin();
