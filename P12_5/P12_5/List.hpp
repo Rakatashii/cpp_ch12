@@ -9,8 +9,8 @@
 class List{
 public:
     List();
-    void push_back(std::string data);
-    void insert(Iterator iter, std::string data);
+    void push_back(int data);
+    void insert(Iterator iter, int data);
     Iterator erase(Iterator iter);
     Iterator begin();
     Iterator end();

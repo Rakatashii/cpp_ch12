@@ -4,7 +4,7 @@ List::List(){
     first = NULL;
     last = NULL;
 }
-void List::push_back(std::string data){
+void List::push_back(int data){
     Node* new_node = new Node(data);
     if (last == NULL) { // list is empty
         first = new_node;
@@ -15,7 +15,7 @@ void List::push_back(std::string data){
         last = new_node; // new node now recognized as last node
     }
 }
-void List::insert(Iterator iter, std::string data){
+void List::insert(Iterator iter, int data){
     if (iter.position == NULL){ // iter is pointing to last element
         push_back(data);
         return;
@@ -83,8 +83,8 @@ void List::display(){
     
     std::cout << "List: ";
     for (iter = begin(); !(iter.equals(end())); iter.next()){
-        std::string s = iter.get();
-        printf("[ %*s ]", print_width, s.c_str());
+        int n = iter.get();
+        printf("[ %*i ]", print_width, n);
         if (!(iter.equals(end()))) std::cout << ", ";
     }
     if (iter.position == NULL) printf("[ %*s ]\n", print_width, "(END)  ");
@@ -97,8 +97,8 @@ void List::display(Iterator pos){
     
     std::cout << "List: { ";
     for (iter = begin(); !(iter.equals(end())); iter.next()){
-        std::string s = iter.get();
-        printf("[ %*s ]", print_width, s.c_str());
+        int n = iter.get();
+        printf("[ %*i ]", print_width, n);
         if (!(iter.equals(end()))) std::cout << ", ";
         if (iter.equals(pos)) keep_counting = false;
         else if (keep_counting) char_count += 16;

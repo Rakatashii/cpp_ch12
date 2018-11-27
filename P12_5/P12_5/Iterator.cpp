@@ -4,7 +4,7 @@ Iterator::Iterator(){
     position = NULL;
     container = NULL;
 }
-std::string Iterator::get() const{
+int Iterator::get() const{
     assert(position != NULL);
     return position->data;
 }
@@ -29,9 +29,17 @@ bool Iterator::equals(Iterator b) const{
     return position == b.position;
 }
 // Guessing it would be a little different when not working w/ strings - will wait for templates to get into that
-std::string& Iterator::operator*(){
+int& Iterator::operator*(){
     /* std::string* node_data = &(position->data); return *node_data; */
     return *&(position->data);
 }
 
+Iterator Iterator::operator++(){
+    next();
+    return *this;
+}
+Iterator Iterator::operator--(){
+    previous();
+    return *this;
+}
 

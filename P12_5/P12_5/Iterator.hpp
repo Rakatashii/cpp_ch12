@@ -8,11 +8,13 @@
 class Iterator{
 public:
     Iterator();
-    std::string get() const;
+    int get() const;
     void next(int idx = 1);
     void previous(int idx = 1);
     bool equals(Iterator b) const;
-    std::string& operator*();
+    int& operator*();
+    Iterator operator++();
+    Iterator operator--();
     //friend std::ostream& operator<<(std::ostream& os, Iterator iter);
 private:
     Node* position;

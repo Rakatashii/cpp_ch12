@@ -4,13 +4,13 @@
 
 using namespace std;
 
-// DOES STRING_LLIST SEE THIS???
+// DOES STRING_LLIST SEE THIS??? // Nope
 
 int main(int argc, const char * argv[]) {
     List people;
     Iterator iter = people.begin();
-    people.insert(iter, "Dave");
-    people.insert(iter, "Karry");
+    people.insert(iter, 4);
+    people.insert(iter, 7);
     
     people.display(iter);
     iter.previous();
@@ -18,9 +18,9 @@ int main(int argc, const char * argv[]) {
     iter = people.begin();
     people.display(iter);
     
-    cout << *iter << endl;
-    *iter = "Larry";
-    cout << *iter << endl;
+    *iter = 18;
+    ++iter;
+    *iter = 45;
     people.display(iter);
 
     return 0;
