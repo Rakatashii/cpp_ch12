@@ -20,6 +20,7 @@ public:
     //friend std::ostream& operator<<(std::ostream& os, Iterator iter);
 private:
     Node* position;
+    Node* before;
     List* container;
     friend class List;
 };

@@ -3,6 +3,7 @@
 Iterator::Iterator(){
     position = NULL;
     container = NULL;
+    before = NULL;
 }
 int Iterator::get() const{
     assert(position != NULL);
@@ -10,6 +11,7 @@ int Iterator::get() const{
 }
 void Iterator::next(int idx){
     assert(position != NULL);
+    before = position;
     position = position->next;
     for (int i = 1; i < idx; i++){
         next(1);
@@ -20,9 +22,9 @@ void Iterator::previous(int idx){
     if (position == NULL)
         position = container->last; // Remember that even though the last element in the list is really NULL, that version if last is really just a termination indicator. Last always points to a node with a real value so long as the list is not truly empty
     else
-        position = position->previous;
+        position = before;
     for (int i = 1; i < idx; i++){
-        previous(1);
+        if (before != NULL) position = before;
     }
 }
 bool Iterator::equals(Iterator b) const{
@@ -35,19 +37,26 @@ int& Iterator::operator*(){
 }
 
 Iterator& Iterator::operator++(){
+    assert(position != container->last);
     next();
     return *this;
 }
+
 Iterator& Iterator::operator--(){
-    previous();
+    assert(position != container->first);
+    position = before;
     return *this;
 }
+
 Iterator& Iterator::operator++ (int) {  // pre-increment
+    assert(position != container->last);
     next();
     return *this;
 }
+
 Iterator& Iterator::operator-- (int) {  // pre-increment
-    previous();
+    assert(position != container->first);
+    position = before;
     return *this;
 }
 

@@ -5,79 +5,101 @@ List::List(){
     last = NULL;
     list_size = 0;
 }
-void List::push_back(int data){
+void List::push_back(int data, Iterator* iter){ // For now, aside from overload, don't see an alternative to the optional Iterator parameter, aside from rewriting the function contents within insert.
     Node* new_node = new Node(data);
-    if (last == NULL) { // list is empty
+    if (last == NULL) {
         first = new_node;
         last = new_node;
+        if (iter != NULL) iter->before = NULL;
+        new_node->next = NULL;
+        if (iter != NULL) iter->position = new_node;
     } else{
-        new_node->previous = last;
+        if (iter != NULL) iter->before = last;
         last->next = new_node;
-        last = new_node; // new node now recognized as last node
+        last = new_node;
+        if (iter != NULL) iter->position = last;
+        new_node->next = NULL;
     }
     list_size++;
 }
 void List::push_front(int data){
-    insert(begin(), data);
+    Iterator iter = begin();
+    insert(iter, data);
 }
-void List::insert(Iterator iter, int data){
-    if (iter.position == NULL){ // iter is pointing to last element
-        push_back(data);
+void List::insert(Iterator& iter, int data){
+    if (last == NULL){
+        push_back(data, &iter);
         return;
     }
-    Node* after = iter.position;
-    Node* before = after->previous;
     Node* new_node = new Node(data);
-    new_node->previous = before;
-    new_node->next = after;
-    after->previous = new_node; // We know that after->next is not NULL, since we would have already called pushback if so.
-    // Now want to call brefore->next = new_node, but it is still possible that before is NULL
-    if (before == NULL){
+    Node* prev;
+    Node* after;
+    
+    if (iter.position == first){
+        prev = NULL;
+        after = first;
+        last = first;
         first = new_node;
-    } else{
-        before->next = new_node;
+        new_node->next = last;
+        iter.before = prev;
+    } else {
+        prev = iter.before;
+        after = iter.position;
+        prev->next = new_node;
+        new_node->next = after;
+        iter.before = prev;
     }
+    
+    if (prev == NULL){
+        first = new_node;
+        iter.before = NULL;
+    } else{
+        iter.before = prev;
+        prev->next = new_node;
+    }
+    iter.position = new_node;
     list_size++;
 }
-Iterator List::erase(Iterator iter){
-    // It is illegal to erase any element past the end, so also cannot erase the last element (== NULL)
+void List::erase(Iterator& iter){
     assert(iter.position != NULL);
+    Node* prev = iter.before;
     Node* remove = iter.position;
-    Node* before = remove->previous;
     Node* after = remove->next;
     
-    //We want:
-    //before->next = after; // if before != NULL
-    //after->previous = before // if after != NULL
-    // However, it is still possible that before or after or both are NULL
     if (remove == first){
         first = after; // Seems this is ok even if after is NULL
+        iter.before = NULL;
+        iter.position = first;
     } else {
-        before->next = after; // there is at least one element before remove
+        prev->next = after; // there is at least one element before remove
+        iter.position = after;
+        iter.before = prev;
     }
+    
     if (remove == last){
-        last = before;
-    } else {
-        after->previous = before;
+        last = prev;
+        prev->next = NULL;
+        iter.position = prev;
     }
-    delete remove; // remove still points to after and before, but now after->previous is before and before->next = after. We should delete this pointer since there is no need to have multiple pointers to and from the same Node.
-    Iterator r;
-    r.position = after; // We return the element that comes after the erased element
-    // Intuitively, why is this a good thing? Well if we think in terms of vector, and wanted to remove some v[i], we are being returned the new value of in v at index i once that value is removed. If we returned before instead, then that would be like decrementing the Iterator within this function call, which would be kind of confusing.
-    r.container = this;
+    
+    remove->next = NULL;
+    delete remove;
+    remove = NULL;
+
     list_size--;
-    return r;
 }
 Iterator List::begin(){
     Iterator iter;
     iter.position = first;
     iter.container = this;
+    iter.before= NULL;
     return iter;
 }
 Iterator List::end(){
     Iterator iter;
     iter.position = NULL; // Note that iter.position is not last, last is the last element in the list that is not NULL
     iter.container = this;
+    iter.before = last;
     return iter;
 }
 bool List::is_empty() const{
@@ -117,6 +139,7 @@ void List::display(Iterator pos, std::string list_name){
     std::cout << " }\n";
 print_pos: if (!keep_counting) printf("%*s\n", char_count, "(pos)");
 }
+/*
 void List::reverse(){
     List b;
     Iterator first = begin();
@@ -130,6 +153,7 @@ void List::reverse(){
     
     for (first = b.begin(); !first.equals(b.end()); first++) push_back(*first);
 }
+ */
 void List::swap(List& b){
     int b_size = b.list_size;
     b.list_size = list_size;
